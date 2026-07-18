@@ -1,0 +1,923 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Book Consultation | Immigration Consultancy{% endblock %}
+
+
+{% block extra_css %}
+<style>
+    #slot-calendar {
+
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+
+    }
+
+
+    .day-card {
+
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, .1);
+
+    }
+
+
+    .time-grid {
+
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+
+    }
+
+
+    .slot-button {
+
+        border: 1px solid #ddd;
+        background: white;
+        padding: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+
+    }
+
+
+    .slot-button.active {
+
+        background: #198754;
+        color: white;
+
+    }
+
+
+    .page-header {
+
+        background: linear-gradient(135deg,
+                var(--primary-color) 0%,
+                var(--secondary-color) 100%);
+
+        color: white;
+        padding: 120px 0 60px;
+
+    }
+
+
+    .booking-card {
+
+        border: none;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, .1);
+        border-radius: 12px;
+
+    }
+
+
+    .form-label {
+
+        font-weight: 600;
+        color: var(--primary-color);
+
+    }
+
+    .calendar-wrapper {
+
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, .08);
+        min-height: 420px;
+
+    }
+
+    .calendar-day {
+
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        cursor: pointer;
+        border: 1px solid #ddd;
+        transition: .2s;
+
+    }
+
+    .calendar-day:hover {
+
+        border-color: #198754;
+
+    }
+
+    .calendar-day.disabled {
+
+        background: #f5f5f5;
+        color: #bbb;
+        cursor: not-allowed;
+
+    }
+
+    .calendar-day.available {
+
+        border: 2px solid #198754;
+
+    }
+
+    .calendar-day.active {
+
+        background: #198754;
+        color: white;
+
+    }
+
+    .calendar-container {
+
+        display: grid;
+        grid-template-columns: repeat(2, minmax(340px, 1fr));
+        gap: 30px;
+        align-items: start;
+
+    }
+
+    .calendar-title {
+
+        text-align: center;
+        font-weight: 700;
+        margin-bottom: 15px;
+
+    }
+
+    .calendar-weekdays {
+
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        text-align: center;
+        font-weight: 600;
+        margin-bottom: 8px;
+
+    }
+
+    .calendar-grid {
+
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 8px;
+
+    }
+
+    .calendar-placeholder {
+        background: #fff;
+        border-radius: 16px;
+        padding: 70px 30px;
+        text-align: center;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, .08);
+    }
+
+    .calendar-placeholder-icon {
+        font-size: 64px;
+        margin-bottom: 20px;
+    }
+
+    .calendar-placeholder h5 {
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+
+    .calendar-placeholder p {
+        color: #6c757d;
+    }
+
+    @media(max-width:992px) {
+
+        .calendar-container {
+
+            grid-template-columns: 1fr;
+
+        }
+
+    }
+
+    .time-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 12px;
+    }
+
+    .time-btn {
+        border: 1px solid #ddd;
+        background: white;
+        border-radius: 10px;
+        padding: 12px;
+        cursor: pointer;
+        transition: .2s;
+    }
+
+    .time-btn:hover {
+        background: #f3f3f3;
+    }
+
+    .time-btn.active {
+        background: #198754;
+        color: white;
+        border-color: #198754;
+    }
+
+
+
+    @media(max-width:768px) {
+
+        #slot-calendar {
+
+            grid-template-columns: 1fr;
+
+        }
+
+
+        .time-grid {
+
+            grid-template-columns: 1fr;
+
+        }
+
+    }
+</style>
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<section class="page-header">
+
+    <div class="container text-center">
+
+        <h1 class="display-5 fw-bold">
+            Book a Consultation
+        </h1>
+
+        <p class="lead opacity-75 mb-0">
+            Schedule your appointment with our immigration experts
+        </p>
+
+    </div>
+
+</section>
+
+<section class="py-5 bg-light">
+
+    <div class="container py-4">
+
+        <div class="row justify-content-center">
+
+            <div class="col-lg-10">
+
+
+                <div class="card booking-card">
+
+
+                    <div class="card-body p-4 p-md-5">
+
+
+                        <form method="post" id="booking-form">
+
+
+                            {% csrf_token %}
+
+
+
+                            {% if form.non_field_errors %}
+
+                            <div class="alert alert-danger">
+
+                                {% for error in form.non_field_errors %}
+
+                                {{ error }}
+
+                                {% endfor %}
+
+                            </div>
+
+                            {% endif %}
+
+
+
+                            <div class="mb-3">
+
+                                <label for="{{ form.full_name.id_for_label }}" class="form-label">
+                                    Full Name
+                                </label>
+
+
+                                {{ form.full_name }}
+
+
+                                {% if form.full_name.errors %}
+
+                                <div class="text-danger small mt-1">
+
+                                    {{ form.full_name.errors.0 }}
+
+                                </div>
+
+                                {% endif %}
+
+
+                            </div>
+
+
+
+
+                            <div class="mb-3">
+
+                                <label for="{{ form.email.id_for_label }}" class="form-label">
+                                    Email
+                                </label>
+
+
+                                {{ form.email }}
+
+
+                                {% if form.email.errors %}
+
+                                <div class="text-danger small mt-1">
+
+                                    {{ form.email.errors.0 }}
+
+                                </div>
+
+                                {% endif %}
+
+
+                            </div>
+
+
+
+
+                            <div class="mb-3">
+
+                                <label for="{{ form.phone.id_for_label }}" class="form-label">
+                                    Phone
+                                </label>
+
+
+                                {{ form.phone }}
+
+
+                                {% if form.phone.errors %}
+
+                                <div class="text-danger small mt-1">
+
+                                    {{ form.phone.errors.0 }}
+
+                                </div>
+
+                                {% endif %}
+
+
+                            </div>
+
+
+
+
+                            <div class="mb-3">
+
+                                <label for="{{ form.office.id_for_label }}" class="form-label">
+                                    Select Office
+                                </label>
+
+
+                                {{ form.office }}
+
+
+                                {% if form.office.errors %}
+
+                                <div class="text-danger small mt-1">
+
+                                    {{ form.office.errors.0 }}
+
+                                </div>
+
+                                {% endif %}
+
+
+                            </div>
+
+
+
+
+
+                            <div class="mb-4">
+
+
+                                <label class="form-label">
+
+                                    Select Available Slot
+
+                                </label>
+
+
+                                <input type="hidden" name="slot" id="id_slot">
+
+
+                                <h5 class="mb-3">Choose a Date</h5>
+
+                                <div class="calendar-wrapper">
+
+                                    <div class="calendar-header">
+
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+
+                                            <button type="button" id="prev-month" class="calendar-nav">
+                                                ←
+                                            </button>
+
+                                            <button type="button" id="next-month" class="calendar-nav">
+                                                →
+                                            </button>
+
+                                        </div>
+
+                                        <div id="calendar-placeholder" class="calendar-placeholder">
+                                            <div class="calendar-placeholder-icon">📅</div>
+                                            <h5>Select an Office</h5>
+                                            <p class="mb-0">
+                                                Choose an office above to view available consultation dates.
+                                            </p>
+                                        </div>
+
+                                        <div id="calendar-loading" class="calendar-placeholder" style="display:none;">
+                                            <div class="calendar-placeholder-icon">⏳</div>
+                                            <h5>Checking available consultation slots...</h5>
+                                            <p class="mb-0">
+                                                Please wait while we retrieve the latest availability for your selected office.
+                                            </p>
+                                        </div>
+
+                                        <div id="calendar-container" class="calendar-container" style="display:none;">
+                                            <div id="calendar-one" class="calendar-wrapper"></div>
+                                            <div id="calendar-two" class="calendar-wrapper"></div>
+                                        </div>
+
+                                    </div>
+
+                                    <hr>
+                                    <h5 class="mb-3">
+                                        Available Times
+                                    </h5>
+
+                                    <div id="time-list" class="time-list"></div>
+
+
+
+                                    <div id="slot-error" class="text-danger mt-2"></div>
+
+
+
+                                    {% if form.slot.errors %}
+
+                                    <div class="text-danger small mt-1">
+
+                                        {{ form.slot.errors.0 }}
+
+                                    </div>
+
+                                    {% endif %}
+
+
+
+                                    <div class="form-text">
+
+                                        Slots update automatically when you change the office.
+
+                                    </div>
+
+
+                                </div>
+
+
+
+
+                                <button type="submit" class="btn btn-accent btn-lg w-100">
+
+                                    <i class="bi bi-arrow-right-circle me-2"></i>
+
+                                    Continue to Payment
+
+                                </button>
+
+
+
+                        </form>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+
+        const officeSelect = document.getElementById("id_office");
+
+        const calendarOne = document.getElementById("calendar-one");
+        const calendarTwo = document.getElementById("calendar-two");
+
+        const calendarContainer = document.getElementById("calendar-container");
+        const calendarPlaceholder = document.getElementById("calendar-placeholder");
+
+        const prevBtn = document.getElementById("prev-month");
+        const nextBtn = document.getElementById("next-month");
+
+        const timeList = document.getElementById("time-list");
+
+        const slotInput = document.getElementById("id_slot");
+
+
+        let availableDates = {};
+
+        let currentMonth = 0;
+
+        function loadSlots(officeId) {
+
+            calendarPlaceholder.style.display = "none";
+            calendarContainer.style.display = "none";
+            document.getElementById("calendar-loading").style.display = "block";
+
+
+            fetch(`/api/slots/?office=${officeId}`)
+
+                .then(response => response.json())
+
+                .then(days => {
+
+
+                    availableDates = {};
+                    calendarPlaceholder.style.display = "none";
+                    calendarContainer.style.display = "grid";
+
+
+                    days.forEach(day => {
+
+                        availableDates[day.iso_date] = day;
+
+                    });
+
+                    renderCalendars();
+                    document.getElementById("calendar-loading").style.display = "none";
+                    calendarContainer.style.display = "grid";
+                    
+            })
+            .catch(error => {
+                document.getElementById("calendar-loading").style.display = "none";
+                calendarPlaceholder.style.display = "block";
+                
+                
+                console.error(error);
+                });
+
+        }
+
+        function renderCalendars() {
+
+            let today = new Date();
+
+            let month1 = new Date(
+                today.getFullYear(),
+                today.getMonth() + currentMonth,
+                1
+            );
+
+            let month2 = new Date(
+                today.getFullYear(),
+                today.getMonth() + currentMonth + 1,
+                1
+            );
+
+            renderMonth(calendarOne, month1);
+            renderMonth(calendarTwo, month2);
+        }
+        function renderMonth(container, date) {
+
+            container.innerHTML = "";
+
+            const monthName = date.toLocaleString(
+                "default",
+                {
+                    month: "long",
+                    year: "numeric"
+                }
+            );
+
+
+
+            let title = document.createElement("h5");
+
+            title.className = "calendar-title";
+
+            title.innerText = monthName;
+
+
+            container.appendChild(title);
+
+
+            let weekdays = document.createElement("div");
+
+            weekdays.className = "calendar-weekdays";
+
+
+            [
+                "Mo",
+                "Tu",
+                "We",
+                "Th",
+                "Fr",
+                "Sa",
+                "Su"
+
+            ].forEach(day => {
+
+
+                let div = document.createElement("div");
+
+                div.innerText = day;
+
+                weekdays.appendChild(div);
+
+
+            });
+
+
+
+            container.appendChild(weekdays);
+
+            let grid = document.createElement("div");
+
+            grid.className = "calendar-grid";
+
+
+
+            let firstDay = new Date(
+                date.getFullYear(),
+                date.getMonth(),
+                1
+            );
+
+            let startingDay = firstDay.getDay();
+
+
+            startingDay = startingDay === 0 ? 6 : startingDay - 1;
+
+            for (let i = 0; i < startingDay; i++) {
+
+                let empty = document.createElement("div");
+
+                grid.appendChild(empty);
+
+            }
+
+            let daysInMonth = new Date(
+                date.getFullYear(),
+                date.getMonth() + 1,
+                0
+            ).getDate();
+
+            for (let day = 1; day <= daysInMonth; day++) {
+
+
+                let cell = document.createElement("div");
+
+                cell.className = "calendar-day";
+
+
+                cell.innerText = day;
+
+
+
+                let current = new Date(
+                    date.getFullYear(),
+                    date.getMonth(),
+                    day
+                );
+
+
+
+                let iso =
+                    current.getFullYear() +
+                    "-" +
+                    String(current.getMonth() + 1).padStart(2, "0") +
+                    "-" +
+                    String(day).padStart(2, "0");
+
+
+
+                let today = new Date();
+
+                today.setHours(0, 0, 0, 0);
+
+
+
+                if (current <= today) {
+
+
+                    cell.classList.add("disabled");
+
+
+                }
+
+                else if (availableDates[iso]) {
+
+
+                    cell.classList.add("available");
+
+
+
+                    cell.onclick = function () {
+
+
+                        document
+                            .querySelectorAll(".calendar-day")
+                            .forEach(d => {
+                                d.classList.remove("active");
+                            });
+
+
+
+                        cell.classList.add("active");
+
+
+                        showTimes(
+                            availableDates[iso]
+                        );
+
+
+                    };
+
+
+                }
+
+                else {
+
+
+                    cell.classList.add("disabled");
+
+
+                }
+
+
+
+                grid.appendChild(cell);
+
+
+
+            }
+
+            container.appendChild(grid);
+
+
+
+        }
+
+
+        function showTimes(day) {
+
+
+            timeList.innerHTML = "";
+
+
+
+            day.slots.forEach(slot => {
+
+
+                let button = document.createElement("button");
+
+
+                button.type = "button";
+
+
+                button.className = "time-btn";
+
+
+                button.innerText = slot.time;
+
+
+
+                button.onclick = function () {
+
+
+
+                    document
+                        .querySelectorAll(".time-btn")
+                        .forEach(btn => {
+                            btn.classList.remove("active");
+                        });
+
+
+
+                    button.classList.add("active");
+
+
+
+                    slotInput.value = slot.id;
+
+
+
+                };
+
+
+
+                timeList.appendChild(button);
+            });
+
+
+
+        }
+
+        officeSelect.addEventListener(
+            "change",
+            function () {
+
+                loadSlots(this.value);
+
+            }
+        );
+
+        prevBtn.addEventListener("click", function () {
+
+            if (currentMonth > 0) {
+
+                currentMonth--;
+
+                renderCalendars();
+
+            }
+
+        });
+
+        nextBtn.addEventListener("click", function () {
+
+            currentMonth++;
+
+            renderCalendars();
+
+        });
+
+        if (officeSelect.value) {
+
+            loadSlots(officeSelect.value);
+
+        }
+
+        const phoneInput = document.querySelector("#id_phone");
+
+        const iti = window.intlTelInput(phoneInput, {
+
+            initialCountry: "in",
+
+            preferredCountries: [
+                "in",
+                "au",
+                "np",
+                "pk",
+                "bd",
+                "lk"
+            ],
+
+            separateDialCode: true,
+            nationalMode: true,
+            utilsScript:
+                "https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.0/build/js/utils.js"
+
+        });
+
+        document.getElementById("booking-form").addEventListener("submit", function () {
+            console.log("Visible input:", phoneInput.value);
+
+            console.log("getNumber():", iti.getNumber());
+
+        });
+        
+        });
+</script>
+
+{% endblock %}

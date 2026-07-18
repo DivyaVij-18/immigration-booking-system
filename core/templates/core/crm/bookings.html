@@ -1,0 +1,126 @@
+{% extends "core/crm/crm_base.html" %}
+
+{% block title %}
+Bookings
+{% endblock %}
+
+{% block crm_title %}
+Bookings
+{% endblock %}
+
+{% block crm_content %}
+
+<div class="card shadow-sm">
+
+    <div class="card-header">
+        <h5 class="mb-0">All Bookings</h5>
+    </div>
+
+    <div class="card-body p-0">
+
+        <table class="table table-hover mb-0">
+
+            <thead class="table-light">
+
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Customer</th>
+                    <th>Office</th>
+                    <th>Appointment</th>
+                    <th>Booking Status</th>
+                    <th>Payment</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for booking in bookings %}
+
+                <tr>
+
+                    <td>{{ booking.booking_id }}</td>
+
+                    <td>
+                        <strong>{{ booking.full_name }}</strong><br>
+                        <small>{{ booking.email }}</small>
+                    </td>
+
+                    <td>{{ booking.office.name }}</td>
+
+                    <td>
+                        {{ booking.slot.date }}<br>
+                        {{ booking.slot.time }}
+                    </td>
+
+                    <td>
+
+                        {% if booking.booking_status == "confirmed" %}
+
+                            <span class="badge bg-success">
+                                Confirmed
+                            </span>
+
+                        {% elif booking.booking_status == "pending" %}
+
+                            <span class="badge bg-warning text-dark">
+                                Pending
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-danger">
+                                Cancelled
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                    <td>
+
+                        {% if booking.payment_status == "paid" %}
+
+                            <span class="badge bg-success">
+                                Paid
+                            </span>
+
+                        {% elif booking.payment_status == "pending" %}
+
+                            <span class="badge bg-warning text-dark">
+                                Pending
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-danger">
+                                Failed
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+            {% empty %}
+
+                <tr>
+
+                    <td colspan="6" class="text-center py-4">
+                        No bookings found.
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

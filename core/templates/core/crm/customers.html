@@ -1,0 +1,105 @@
+{% extends "core/crm/crm_base.html" %}
+
+{% block title %}
+Customers
+{% endblock %}
+
+{% block crm_title %}
+Customers
+{% endblock %}
+
+{% block crm_content %}
+
+<div class="card shadow-sm">
+
+    <div class="card-header d-flex justify-content-between align-items-center">
+
+        <h5 class="mb-0">Customer List</h5>
+
+        <input
+            type="text"
+            id="customerSearch"
+            class="form-control w-25"
+            placeholder="Search customer..."
+        >
+
+    </div>
+
+    <div class="card-body p-0">
+
+        <table class="table table-hover mb-0" id="customerTable">
+
+            <thead class="table-light">
+
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Office</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for customer in customers %}
+
+                <tr>
+
+                    <td>{{ customer.booking_id }}</td>
+
+                    <td>{{ customer.full_name }}</td>
+
+                    <td>{{ customer.email }}</td>
+
+                    <td>{{ customer.phone }}</td>
+
+                    <td>{{ customer.office.name }}</td>
+
+                </tr>
+
+            {% empty %}
+
+                <tr>
+
+                    <td colspan="5" class="text-center">
+
+                        No customers found.
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<script>
+
+document.getElementById("customerSearch").addEventListener("keyup", function(){
+
+    let filter = this.value.toLowerCase();
+
+    let rows = document.querySelectorAll("#customerTable tbody tr");
+
+    rows.forEach(function(row){
+
+        row.style.display =
+            row.innerText.toLowerCase().includes(filter)
+            ? ""
+            : "none";
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

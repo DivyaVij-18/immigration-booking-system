@@ -1,0 +1,124 @@
+{% extends "core/crm/crm_base.html" %}
+
+{% block title %}
+Reports
+{% endblock %}
+
+{% block crm_title %}
+Reports
+{% endblock %}
+
+{% block crm_content %}
+
+<div class="row g-4 mb-4">
+
+    <div class="col-md-3">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
+                <h2>{{ total_bookings }}</h2>
+                <p class="text-muted mb-0">Bookings</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
+                <h2>{{ confirmed }}</h2>
+                <p class="text-muted mb-0">Confirmed</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
+                <h2>{{ pending }}</h2>
+                <p class="text-muted mb-0">Pending</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
+                <h2>${{ revenue }}</h2>
+                <p class="text-muted mb-0">Revenue</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="card shadow-sm">
+
+    <div class="card-header">
+        <strong>Office Summary</strong>
+    </div>
+
+    <div class="card-body p-0">
+
+        <table class="table table-hover mb-0">
+
+            <thead class="table-light">
+                <tr>
+                    <th>Office</th>
+                    <th>Total Bookings</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+            {% for office in offices %}
+
+                <tr>
+
+                    <td>{{ office.name }}</td>
+
+                    <td>{{ office.bookings.count }}</td>
+
+                </tr>
+
+            {% empty %}
+
+                <tr>
+
+                    <td colspan="2" class="text-center py-4">
+
+                        No data available.
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<br>
+
+<div class="card shadow-sm">
+
+    <div class="card-header">
+        Booking Statistics
+    </div>
+
+    <div class="card-body text-center">
+
+        <p class="text-muted">
+
+            📈 Chart.js graphs can be added here later.
+
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

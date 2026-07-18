@@ -1,0 +1,173 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Secure Payment | Immigration Consultancy{% endblock %}
+
+{% block extra_css %}
+.page-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    padding: 120px 0 60px;
+}
+
+.payment-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.summary-item strong {
+    color: var(--primary-color);
+}
+
+.stripe-box {
+    background: #f8f9fa;
+    border: 2px dashed #d6d6d6;
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+}
+
+.stripe-box i {
+    font-size: 3rem;
+    color: #635bff;
+}
+
+.secure-text {
+    color: #6c757d;
+    font-size: 0.95rem;
+}
+{% endblock %}
+
+{% block content %}
+
+<section class="page-header">
+    <div class="container text-center">
+        <h1 class="display-5 fw-bold">Secure Payment</h1>
+        <p class="lead opacity-75">
+            Review your booking and continue to Stripe Checkout
+        </p>
+    </div>
+</section>
+
+<section class="py-5 bg-light">
+    <div class="container">
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="row justify-content-center">
+
+            <div class="col-lg-5">
+
+                <div class="card payment-card mb-4">
+                    <div class="card-body p-4">
+
+                        <h4 class="fw-bold text-primary mb-4">
+                            Booking Summary
+                        </h4>
+
+                        <div class="summary-item">
+                            <span>Name</span>
+                            <strong>{{ booking.full_name }}</strong>
+                        </div>
+
+                        <div class="summary-item">
+                            <span>Email</span>
+                            <strong>{{ booking.email }}</strong>
+                        </div>
+
+                        <div class="summary-item">
+                            <span>Phone</span>
+                            <strong>{{ booking.phone }}</strong>
+                        </div>
+
+                        <hr>
+
+                        <div class="summary-item">
+                            <span>Office</span>
+                            <strong>{{ booking.office.name }}</strong>
+                        </div>
+
+                        <div class="summary-item">
+                            <span>Date</span>
+                            <strong>{{ booking.slot.date|date:"d M Y" }}</strong>
+                        </div>
+
+                        <div class="summary-item">
+                            <span>Time</span>
+                            <strong>{{ booking.slot.time|time:"g:i A" }}</strong>
+                        </div>
+
+                        <hr>
+
+                        <div class="summary-item fs-5">
+                            <span>Amount</span>
+                            <strong>
+                                {{ booking.payment.currency }}
+                                {{ booking.payment.amount }}
+                            </strong>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-lg-5">
+
+                <div class="card payment-card">
+
+                    <div class="card-body p-5">
+
+                        <div class="stripe-box">
+
+                            <i class="bi bi-shield-lock-fill"></i>
+
+                            <h3 class="mt-3">
+                                Secure Payment with Stripe
+                            </h3>
+
+                            <p class="secure-text mt-3">
+                                After clicking the button below, you'll be redirected
+                                to Stripe's secure checkout page where you can safely
+                                enter your card details.
+                            </p>
+
+                            <p class="secure-text">
+                                Your card information is never stored on our servers.
+                            </p>
+
+                            <form method="post">
+                                {% csrf_token %}
+
+                                <button type="submit" class="btn btn-primary btn-lg w-100 mt-3">
+                                    🔒 Pay Securely with Stripe
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

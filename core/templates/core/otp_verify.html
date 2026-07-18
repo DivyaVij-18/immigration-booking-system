@@ -1,0 +1,93 @@
+{% extends 'core/base.html' %}
+
+{% block title %}OTP Verification | Immigration Consultancy{% endblock %}
+
+{% block extra_css %}
+    .page-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+        padding: 120px 0 60px;
+    }
+
+    .otp-card {
+        border: none;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        max-width: 480px;
+        margin: 0 auto;
+    }
+
+    .otp-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+        margin: 0 auto 1.5rem;
+    }
+
+    #id_otp {
+        letter-spacing: 8px;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container text-center">
+        <h1 class="display-5 fw-bold">OTP Verification</h1>
+        <p class="lead opacity-75 mb-0">Enter the 6-digit code to confirm your booking</p>
+    </div>
+</section>
+
+<section class="py-5 bg-light">
+    <div class="container py-4">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show mx-auto" style="max-width:480px" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="card otp-card">
+            <div class="card-body p-4 p-md-5 text-center">
+                <div class="otp-icon">
+                    <i class="bi bi-shield-lock"></i>
+                </div>
+
+                <h4 class="fw-bold text-primary mb-2">Verify Your Identity</h4>
+                <p class="text-muted mb-4">
+                    For demo purposes, use OTP: <strong>123456</strong>
+                </p>
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+
+                    <div class="mb-4">
+                        <label for="{{ form.otp.id_for_label }}" class="form-label fw-semibold">Enter 6-Digit OTP</label>
+                        {{ form.otp }}
+                        {% if form.otp.errors %}
+                            <div class="text-danger small mt-2">{{ form.otp.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <button type="submit" class="btn btn-accent btn-lg w-100">
+                        <i class="bi bi-check-circle me-2"></i>Verify OTP
+                    </button>
+                </form>
+
+                <p class="text-muted small mt-4 mb-0">
+                    Booking for: <strong>{{ booking.full_name }}</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

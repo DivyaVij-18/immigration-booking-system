@@ -1,0 +1,293 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Home | Immigration Consultancy{% endblock %}
+
+{% block extra_css %}
+    .hero-section {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        background:
+            linear-gradient(135deg, rgba(13, 59, 102, 0.92) 0%, rgba(26, 107, 154, 0.85) 100%),
+            url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1920') center/cover no-repeat;
+        color: white;
+        padding-top: 80px;
+    }
+
+    .hero-section h1 {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        font-weight: 700;
+        line-height: 1.2;
+    }
+
+    .hero-section .lead {
+        font-size: clamp(1rem, 2.5vw, 1.25rem);
+        opacity: 0.9;
+    }
+
+    .service-icon {
+        font-size: 2.5rem;
+        color: var(--secondary-color);
+        margin-bottom: 1rem;
+    }
+
+    .contact-section {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+    }
+
+    .contact-section .form-control {
+        border: none;
+        padding: 0.75rem 1rem;
+    }
+{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <span class="badge bg-warning text-dark mb-3 px-3 py-2">
+                    <i class="bi bi-star-fill me-1"></i> Trusted Immigration Experts
+                </span>
+                <h1 class="mb-4">Your Gateway to a<br>Better Future Abroad</h1>
+                <p class="lead mb-4">
+                    Expert guidance for visas, permanent residency, study permits, and work authorization.
+                    We turn your immigration dreams into reality.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{% url 'core:book' %}" class="btn btn-accent btn-lg px-4">
+                        <i class="bi bi-calendar-check me-2"></i>Book Consultation
+                    </a>
+                    <a href="{% url 'core:offices' %}" class="btn btn-outline-light btn-lg px-4">
+                        <i class="bi bi-building me-2"></i>Available Offices
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block text-center">
+                <div class="p-4">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="bg-white bg-opacity-10 rounded-3 p-4 backdrop-blur">
+                                <h3 class="fw-bold mb-0">15+</h3>
+                                <small>Years Experience</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="bg-white bg-opacity-10 rounded-3 p-4 backdrop-blur">
+                                <h3 class="fw-bold mb-0">5000+</h3>
+                                <small>Cases Handled</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="bg-white bg-opacity-10 rounded-3 p-4 backdrop-blur">
+                                <h3 class="fw-bold mb-0">98%</h3>
+                                <small>Success Rate</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="bg-white bg-opacity-10 rounded-3 p-4 backdrop-blur">
+                                <h3 class="fw-bold mb-0">20+</h3>
+                                <small>Countries Served</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="py-5 bg-light">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h2 class="section-title display-6">Why Choose Us</h2>
+            <p class="section-subtitle">
+                We provide end-to-end immigration support with transparency, expertise, and personalized care.
+            </p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card card-hover h-100 p-4 text-center">
+                    <div class="icon-box mx-auto">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h5 class="fw-bold">Licensed & Certified</h5>
+                    <p class="text-muted mb-0">
+                        Our consultants are fully licensed and stay updated with the latest immigration policies and regulations.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-hover h-100 p-4 text-center">
+                    <div class="icon-box mx-auto">
+                        <i class="bi bi-person-check"></i>
+                    </div>
+                    <h5 class="fw-bold">Personalized Guidance</h5>
+                    <p class="text-muted mb-0">
+                        Every case is unique. We tailor our approach to your specific goals, background, and timeline.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-hover h-100 p-4 text-center">
+                    <div class="icon-box mx-auto">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+                    <h5 class="fw-bold">Proven Track Record</h5>
+                    <p class="text-muted mb-0">
+                        With thousands of successful applications, our high approval rate speaks for itself.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services -->
+<section id="services" class="py-5">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h2 class="section-title display-6">Our Services</h2>
+            <p class="section-subtitle">
+                Comprehensive immigration solutions for individuals, families, and businesses.
+            </p>
+        </div>
+        <div class="row g-4">
+            <div class="col-sm-6 col-lg-3">
+                <div class="card card-hover h-100 text-center p-4">
+                    <i class="bi bi-airplane service-icon"></i>
+                    <h5 class="fw-bold">Visitor Visa</h5>
+                    <p class="text-muted small mb-0">
+                        Tourist, business, and family visit visas with complete documentation support.
+                    </p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="card card-hover h-100 text-center p-4">
+                    <i class="bi bi-house-heart service-icon"></i>
+                    <h5 class="fw-bold">Permanent Residency</h5>
+                    <p class="text-muted small mb-0">
+                        Express Entry, provincial nominee programs, and family sponsorship pathways.
+                    </p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="card card-hover h-100 text-center p-4">
+                    <i class="bi bi-mortarboard service-icon"></i>
+                    <h5 class="fw-bold">Study Visa</h5>
+                    <p class="text-muted small mb-0">
+                        Student permits, college applications, and post-graduation work permit guidance.
+                    </p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="card card-hover h-100 text-center p-4">
+                    <i class="bi bi-briefcase service-icon"></i>
+                    <h5 class="fw-bold">Work Permit</h5>
+                    <p class="text-muted small mb-0">
+                        Employer-sponsored and open work permits for skilled professionals worldwide.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Meet Our Consultants -->
+<section id="consultants" class="py-5 bg-light">
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h2 class="section-title display-6">Meet Our Consultants</h2>
+            <p class="section-subtitle">
+                Experienced professionals dedicated to making your immigration journey smooth and successful.
+            </p>
+        </div>
+
+        {% if consultants %}
+        <div class="row g-4 justify-content-center">
+            {% for consultant in consultants %}
+            <div class="col-sm-6 col-lg-4">
+                <div class="card card-hover consultant-card h-100 text-center p-4">
+                    <div class="mb-3">
+                        {% if consultant.photo %}
+                            <img src="{{ consultant.photo.url }}" alt="{{ consultant.name }}" class="rounded-circle">
+                        {% else %}
+                            <div class="consultant-placeholder">
+                                {{ consultant.name|first }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <h5 class="fw-bold mb-1">{{ consultant.name }}</h5>
+                    <p class="text-primary small fw-semibold mb-1">{{ consultant.specialization }}</p>
+                    <p class="text-muted small mb-2">{{ consultant.qualification }}</p>
+                    <span class="badge bg-light text-dark">
+                        <i class="bi bi-clock me-1"></i>{{ consultant.experience }}+ Years
+                    </span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center text-muted">
+            <i class="bi bi-people display-4 d-block mb-3"></i>
+            <p>Our consultant profiles will appear here soon. Add them via the admin panel.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="contact-section py-5">
+    <div class="container py-5">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-5">
+                <h2 class="display-6 fw-bold mb-3">Get In Touch</h2>
+                <p class="opacity-75 mb-4">
+                    Have questions about your immigration options? Reach out and our team will respond within 24 hours.
+                </p>
+                <ul class="list-unstyled">
+                    <li class="mb-3">
+                        <i class="bi bi-envelope-fill me-3"></i>info@immigrationconsultancy.com
+                    </li>
+                    <li class="mb-3">
+                        <i class="bi bi-telephone-fill me-3"></i>+1 (800) 123-4567
+                    </li>
+                    <li class="mb-3">
+                        <i class="bi bi-clock-fill me-3"></i>Mon – Sat, 9:00 AM – 6:00 PM
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-7">
+                <div class="card border-0 shadow-lg p-4">
+                    <form>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" placeholder="Your Name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="email" class="form-control" placeholder="Your Email" required>
+                            </div>
+                            <div class="col-12">
+                                <input type="text" class="form-control" placeholder="Subject">
+                            </div>
+                            <div class="col-12">
+                                <textarea class="form-control" rows="4" placeholder="Your Message" required></textarea>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-accent w-100 py-2">
+                                    <i class="bi bi-send me-2"></i>Send Message
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

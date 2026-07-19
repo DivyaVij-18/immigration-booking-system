@@ -22,8 +22,8 @@ def create_checkout_session(payment):
             }
         ],
 
-        success_url="http://127.0.0.1:8000/payment/success/",
-        cancel_url="http://127.0.0.1:8000/payment/cancel/",
+        success_url="https://immigration-booking-system.onrender.com/payment-success/",
+        cancel_url="https://immigration-booking-system.onrender.com/payment-cancel/",
     )
 
     return session

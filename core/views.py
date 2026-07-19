@@ -1,8 +1,10 @@
 from django.contrib import messages
-print(">>> LOADED VIEWS.PY <<<")
 from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+
+import stripe
+from django.conf import settings
 
 from .forms import BookingForm, OTPForm, PaymentForm
 from .models import Booking, Consultant, Office, Slot, Payment, WorkingSchedule
@@ -10,6 +12,8 @@ from .stripe_service import create_checkout_session
 from datetime import date, timedelta, datetime
 import calendar
 from django.db.models import Sum
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 def home(request):
@@ -178,13 +182,27 @@ def payment(request):
 
 @transaction.atomic
 def payment_success(request):
-    booking_pk = request.session.get("booking_pk")
+
+    session_id = request.GET.get("session_id")
+
+    if not session_id:
+        messages.error(request, "Payment session missing.")
+        return redirect("core:home")
+
+    stripe_session = stripe.checkout.Session.retrieve(
+        session_id
+    )
+
+    booking_pk = stripe_session.metadata.get("booking_id")
 
     if not booking_pk:
         messages.error(request, "Booking not found.")
         return redirect("core:home")
 
-    booking = get_object_or_404(Booking, pk=booking_pk)
+    booking = get_object_or_404(
+        Booking,
+        pk=booking_pk
+    )
 
     # Lock the slot while we verify capacity
     slot = (
